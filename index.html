@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Ujian KLP1 Agronomy</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #2E7D32;
+            --primary-light: #4CAF50;
+            --secondary: #FFC107;
+            --dark: #1B5E20;
+            --light: #F1F8E9;
+            --gray: #757575;
+            --white: #FFFFFF;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 15px;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--dark));
+            color: white;
+            padding: 20px 15px;
+            border-radius: 0 0 15px 15px;
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+
+        .logo i {
+            font-size: 2.5rem;
+            margin-right: 10px;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .info-panel {
+            background-color: var(--white);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+        }
+
+        .info-icon {
+            background-color: var(--primary-light);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .materials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .material-card {
+            background-color: var(--white);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 140px;
+        }
+
+        .material-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .material-icon {
+            background-color: var(--light);
+            color: var(--primary);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+            font-size: 1.5rem;
+        }
+
+        .material-title {
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+
+        .material-status {
+            font-size: 0.7rem;
+            padding: 3px 8px;
+            border-radius: 20px;
+            background-color: var(--light);
+            color: var(--gray);
+        }
+
+        .material-status.completed {
+            background-color: #E8F5E9;
+            color: var(--primary);
+        }
+
+        .material-status.in-progress {
+            background-color: #FFF3E0;
+            color: #FF9800;
+        }
+
+        .instructions {
+            background-color: var(--white);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .instructions h3 {
+            color: var(--primary);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .instructions h3 i {
+            margin-right: 10px;
+        }
+
+        .instructions ol {
+            padding-left: 20px;
+        }
+
+        .instructions li {
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            background-color: var(--white);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .progress-bar {
+            height: 10px;
+            background-color: #e0e0e0;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--primary-light));
+            border-radius: 5px;
+            width: 25%;
+            /* Akan diupdate oleh JavaScript */
+            transition: width 0.5s ease;
+        }
+
+        footer {
+            text-align: center;
+            padding: 15px;
+            color: var(--gray);
+            font-size: 0.8rem;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+        }
+
+        .modal-content {
+            background-color: var(--white);
+            border-radius: 15px;
+            width: 100%;
+            max-width: 500px;
+            padding: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            position: relative;
+            animation: modalFadeIn 0.3s;
+        }
+
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray);
+        }
+
+        .modal-header {
+            margin-bottom: 15px;
+            padding-right: 30px;
+        }
+
+        .modal-header h2 {
+            color: var(--primary);
+            font-size: 1.3rem;
+        }
+
+        .modal-body {
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            padding: 10px 20px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            text-align: center;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #757575, #9E9E9E);
+            margin-top: 10px;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 480px) {
+            .materials-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            h1 {
+                font-size: 1.3rem;
+            }
+
+            .material-card {
+                min-height: 120px;
+                padding: 10px;
+            }
+
+            .material-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 1.2rem;
+            }
+        }
+
+        @media (max-width: 350px) {
+            .materials-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="logo">
+            <i class="fas fa-seedling"></i>
+            <div>
+                <h1>Dashboard Ujian KLP1 Agronomy</h1>
+                <div class="subtitle">Seriang Training Center - Karyamas Plantation</div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="info-panel">
+            <div class="info-icon">
+                <i class="fas fa-info-circle"></i>
+            </div>
+            <div>
+                <strong>Informasi Ujian</strong><br>
+                Klik pada materi untuk mengakses soal ujian. Pastikan koneksi internet stabil.
+            </div>
+        </div>
+
+        <div class="progress-container">
+            <div class="progress-header">
+                <span>Progress Ujian</span>
+                <span id="progressText">0/12 Materi</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+        </div>
+
+        <div class="materials-grid" id="materialsContainer">
+            <!-- Materi akan diisi oleh JavaScript -->
+        </div>
+
+        <div class="instructions">
+            <h3><i class="fas fa-list-alt"></i> Petunjuk Pengerjaan</h3>
+            <ol>
+                <li>Klik pada kartu materi yang ingin dikerjakan</li>
+                <li>Pastikan koneksi internet stabil sebelum memulai ujian</li>
+                <li>Kerjakan soal dengan jujur dan teliti</li>
+                <li>Waktu pengerjaan untuk setiap materi adalah 30 menit</li>
+                <li>Setelah selesai, klik tombol "Submit" untuk mengirim jawaban</li>
+                <li>Status pengerjaan akan terupdate secara otomatis</li>
+            </ol>
+        </div>
+    </div>
+
+    <!-- Modal untuk konfirmasi membuka link -->
+    <div class="modal" id="linkModal">
+        <div class="modal-content">
+            <span class="close-modal" id="closeModal">&times;</span>
+            <div class="modal-header">
+                <h2 id="modalTitle">Judul Materi</h2>
+            </div>
+            <div class="modal-body">
+                <p>Anda akan diarahkan ke halaman soal ujian untuk materi: <strong id="materialName">Nama
+                        Materi</strong></p>
+                <p>Pastikan koneksi internet Anda stabil sebelum memulai.</p>
+            </div>
+            <div>
+                <a href="#" class="btn" id="confirmLink" target="_blank">Buka Soal Ujian</a>
+                <button class="btn btn-secondary" id="cancelLink">Batal</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>Seriang Training Center - Karyamas Plantation &copy; 2025</p>
+    </footer>
+
+    <script>
+        // Data materi ujian berdasarkan informasi yang diberikan
+        const materials = [
+            {
+                id: 1,
+                title: "Sistem Manajemen K3",
+                icon: "fas fa-hard-hat",
+                status: "pending",
+                link: "https://forms.gle/SgwD82BZg2uGxUAu9"
+            },
+            {
+                id: 2,
+                title: "Pembibitan Kelapa Sawit Kelas 1",
+                icon: "fas fa-seedling",
+                status: "pending",
+                link: "https://forms.gle/P5KZiAJCxk7AG4uAA"
+            },
+            {
+                id: 3,
+                title: "Memaksimalkan Penggunaan Lahan",
+                icon: "fas fa-mountain",
+                status: "pending",
+                link: "https://forms.gle/63bdF4BQNw3XpMYSA"
+            },
+            {
+                id: 4,
+                title: "Menjaga Kualitas dan Standar",
+                icon: "fas fa-award",
+                status: "pending",
+                link: "https://forms.gle/hxtah5fKHX5RVwNv5"
+            },
+            {
+                id: 5,
+                title: "Manajemen Tanaman Belum Menghasilkan",
+                icon: "fas fa-tree",
+                status: "pending",
+                link: "https://forms.gle/tX1uFRUdNbxELe938"
+            },
+            {
+                id: 6,
+                title: "Manajemen Tanaman Menghasilkan",
+                icon: "fas fa-apple-alt",
+                status: "pending",
+                link: "https://forms.gle/rt7SdcHFvyyh3PVF6"
+            },
+            {
+                id: 7,
+                title: "Manajemen Pemupukan Kelapa Sawit",
+                icon: "fas fa-tint",
+                status: "pending",
+                link: "https://forms.gle/rHe7X6HntZCmEzhh8"
+            },
+            {
+                id: 8,
+                title: "Manajemen Pengendalian Hama",
+                icon: "fas fa-bug",
+                status: "pending",
+                link: "https://forms.gle/F5ZH1QeeTrwHsBDf7"
+            },
+            {
+                id: 9,
+                title: "Koordinasi Pengerasan Jalan",
+                icon: "fas fa-road",
+                status: "pending",
+                link: "https://forms.gle/WSMEgPWGVzgQESSWA"
+            },
+            {
+                id: 10,
+                title: "Mengoptimalkan Hasil Panen",
+                icon: "fas fa-cut",
+                status: "pending",
+                link: "https://forms.gle/DpH966bkpDmiAMnJA"
+            },
+            {
+                id: 11,
+                title: "Prosedur Administrasi Agronomi",
+                icon: "fas fa-file-alt",
+                status: "pending",
+                link: "https://forms.gle/YSd57gmzAeyF31T89"
+            },
+            {
+                id: 12,
+                title: "Budget Perkebunan",
+                icon: "fas fa-chart-line",
+                status: "pending",
+                link: "https://forms.gle/xrvssqXmVkrjXHmr5"
+            }
+        ];
+
+        // Elemen DOM
+        const materialsContainer = document.getElementById('materialsContainer');
+        const linkModal = document.getElementById('linkModal');
+        const closeModal = document.getElementById('closeModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const materialName = document.getElementById('materialName');
+        const confirmLink = document.getElementById('confirmLink');
+        const cancelLink = document.getElementById('cancelLink');
+        const progressFill = document.getElementById('progressFill');
+        const progressText = document.getElementById('progressText');
+
+        let currentMaterial = null;
+
+        // Fungsi untuk merender materi
+        function renderMaterials() {
+            materialsContainer.innerHTML = '';
+
+            materials.forEach(material => {
+                const materialCard = document.createElement('div');
+                materialCard.className = 'material-card';
+                materialCard.innerHTML = `
+                    <div class="material-icon">
+                        <i class="${material.icon}"></i>
+                    </div>
+                    <div class="material-title">${material.title}</div>
+                    <div class="material-status ${material.status}">
+                        ${material.status === 'completed' ? 'Selesai' : 
+                          material.status === 'in-progress' ? 'Dalam Proses' : 'Belum Dimulai'}
+                    </div>
+                `;
+
+                materialCard.addEventListener('click', () => openMaterialModal(material));
+                materialsContainer.appendChild(materialCard);
+            });
+            
+            // Update progress bar
+            calculateProgress();
+        }
+
+        // Fungsi untuk membuka modal konfirmasi
+        function openMaterialModal(material) {
+            currentMaterial = material;
+            modalTitle.textContent = material.title;
+            materialName.textContent = material.title;
+            confirmLink.href = material.link;
+            linkModal.style.display = 'flex';
+        }
+
+        // Fungsi untuk menutup modal
+        function closeMaterialModal() {
+            linkModal.style.display = 'none';
+            currentMaterial = null;
+        }
+
+        // Fungsi untuk menghitung progress
+        function calculateProgress() {
+            const completed = materials.filter(m => m.status === 'completed').length;
+            const inProgress = materials.filter(m => m.status === 'in-progress').length;
+
+            // Progress dihitung berdasarkan materi yang selesai dan sedang dikerjakan
+            const progress = ((completed + (inProgress * 0.5)) / materials.length) * 100;
+            progressFill.style.width = `${progress}%`;
+            progressText.textContent = `${completed}/${materials.length} Materi`;
+        }
+
+        // Fungsi untuk menandai materi sebagai selesai
+        function markMaterialAsCompleted(materialId) {
+            const material = materials.find(m => m.id === materialId);
+            if (material) {
+                material.status = 'completed';
+                renderMaterials();
+                
+                // Update localStorage
+                localStorage.setItem('examMaterials', JSON.stringify(materials));
+            }
+        }
+
+        // Event listeners
+        closeModal.addEventListener('click', closeMaterialModal);
+        cancelLink.addEventListener('click', closeMaterialModal);
+
+        // Tutup modal jika klik di luar konten modal
+        window.addEventListener('click', (event) => {
+            if (event.target === linkModal) {
+                closeMaterialModal();
+            }
+        });
+
+        // Event listener untuk tombol konfirmasi
+        confirmLink.addEventListener('click', (e) => {
+            if (currentMaterial) {
+                // Simpan status bahwa pengguna sedang mengerjakan materi ini
+                currentMaterial.status = 'in-progress';
+                renderMaterials();
+                
+                // Update localStorage
+                localStorage.setItem('examMaterials', JSON.stringify(materials));
+                
+                // Buka link di tab baru
+                window.open(currentMaterial.link, '_blank');
+                
+                // Tutup modal
+                closeMaterialModal();
+            }
+        });
+
+        // Inisialisasi dashboard
+        document.addEventListener('DOMContentLoaded', () => {
+            // Coba muat data dari localStorage jika ada
+            const savedMaterials = localStorage.getItem('examMaterials');
+            if (savedMaterials) {
+                const parsedMaterials = JSON.parse(savedMaterials);
+                
+                // Update status materi berdasarkan data yang disimpan
+                parsedMaterials.forEach(savedMaterial => {
+                    const material = materials.find(m => m.id === savedMaterial.id);
+                    if (material) {
+                        material.status = savedMaterial.status;
+                    }
+                });
+            }
+            
+            renderMaterials();
+        });
+
+        // Fungsi untuk menambah materi baru (jika diperlukan)
+        function addNewMaterial(title, icon, link) {
+            const newMaterial = {
+                id: materials.length + 1,
+                title: title,
+                icon: icon,
+                status: 'pending',
+                link: link
+            };
+
+            materials.push(newMaterial);
+            renderMaterials();
+
+            // Update localStorage
+            localStorage.setItem('examMaterials', JSON.stringify(materials));
+        }
+    </script>
+</body>
+
+</html>
